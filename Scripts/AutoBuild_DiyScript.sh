@@ -12,7 +12,7 @@ Firmware_Diy_Core() {
 	# ${OP_BRANCH}			OpenWrt 源码分支
 	# ${CONFIG_FILE}		配置文件
 	
-	Author=AUTO
+	Author=抖音号：88169460799
 	# 作者名称, AUTO: [自动识别]
 	
 	Author_URL=AUTO
@@ -24,7 +24,7 @@ Firmware_Diy_Core() {
 	Default_IP="192.168.1.65"
 	# 固件 IP 地址
 	
-	Default_Title="Powered by AutoBuild-Actions"
+	Default_Title="抖音:水沝淼㵘~zhuǐ miǎo màn"
 	# 固件终端首页显示的额外信息
 	
 	Short_Fw_Date=true
