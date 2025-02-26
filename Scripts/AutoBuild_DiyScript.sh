@@ -24,7 +24,7 @@ Firmware_Diy_Core() {
 	Default_IP="192.168.50.1"
 	# 固件 IP 地址
 	
-	Default_Title="Powered by 抖音号：3D_K3_P3_P5_SSQ："
+	Default_Title="Powered by 抖音号：3D_K3_P3_P5_SSQ"
 	# 固件终端首页显示的额外信息
 	
 	Short_Fw_Date=true
