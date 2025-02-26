@@ -241,14 +241,14 @@ jobs:
     - name: Download Github API
       if: env.UPLOAD_RELEASES == 'true' && env.Compile_Result == 'true' && !cancelled()
       run: |
-        wget https://api.github.com/repos/${{github.repository}}/releases/tags/immortalwrt -O API_im
+        wget https://api.github.com/repos/${{github.repository}}/releases/tags/immortalwrt -O API
         
     - name: Upload Github API to Release
       if: env.UPLOAD_RELEASES == 'true' && env.Compile_Result == 'true' && !cancelled()
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ./API_im
+        file: ./API
         file_glob: true
         tag: immortalwrt
         overwrite: true
