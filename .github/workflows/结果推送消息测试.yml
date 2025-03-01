@@ -12,16 +12,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 步骤 1：模拟成功构建
-    #- name: Simulate Success
-    #  id: success_step
-    # # run: |
-    #    echo "🎉 模拟成功构建..."
-    #    exit 0  # 强制返回成功状态
+     步骤 1：模拟成功构建
+    - name: Simulate Success
+      id: success_step
+      run: |
+        echo "🎉 模拟成功构建..."
+        exit 0  # 强制返回成功状态
 
     # 步骤 2：模拟失败构建（注释掉可跳过）
     - name: Simulate Failure (Uncomment to test)
-      if: false  # 默认禁用，需要测试时改为 true
+      if: true  # 默认禁用，需要测试时改为 true
       run: |
         echo "💥 模拟失败构建..."
         exit 1  # 强制返回失败状态
