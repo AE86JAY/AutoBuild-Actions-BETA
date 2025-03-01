@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-     步骤 1：模拟成功构建
+    # 步骤 1：模拟成功构建
     - name: Simulate Success
       id: success_step
       run: |
