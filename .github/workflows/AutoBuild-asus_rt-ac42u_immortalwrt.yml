@@ -265,7 +265,7 @@ jobs:
        (env.Compile_Result == 'true' || github.event.action == 'workflow_dispatch') ||
        (github.event.action != 'workflow_dispatch' && cancelled())) &&
        github.event_name != 'workflow_dispatch'
-       env:
+      env:
         DINGTALK_TOKEN: ${{ secrets.DINGTALK_ACCESS_TOKEN }}
       run: |
        if [[ "${{ job.status }}" == "success" ]]; then
