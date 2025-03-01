@@ -259,34 +259,10 @@ jobs:
       with:
         retain_days: 1
         keep_minimum_runs: 2
-        
-    - name: Notify Telegram Result
-      if: always() && (env.Compile_Result == 'true' || env.Compile_Result == 'cancelled')
-      env:
-        TG_TOKEN: ${{ secrets.TELEGRAM }}
-        TG_CHAT_ID: ${{ secrets.TELEGRAM_ID }}
-      run: |
-        COMPILE_STATUS=$([ "${{ env.Compile_Result }}" = "true" ] && echo "✅ 编译成功" || echo "❌ 编译失败")
-        MESSAGE="[ASUS RT-ACRH17 固件编译]
-        
-        状态: $COMPILE_STATUS
-        仓库: ${{ github.repository }}
-        触发者: ${{ github.actor }}
-        分支: ${{ github.ref }}
-        时间: ${{ env.Display_Date }}
-        详情: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
-        curl -s -X POST \
-          "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
-          -d chat_id="${TG_CHAT_ID}" \
-          -d text="${MESSAGE}" \
-          -d parse_mode="Markdown" \
-          -d disable_notification="false"
-          
     - name: Notify DingTalk Result
       if: always()  # 始终触发（成功/失败/取消）
       env:
-        DINGTALK_TOKEN: ${{ secrets.DINGDING }}
+        DINGTALK_TOKEN: ${{ secrets.DINGTALK_ACCESS_TOKEN }}
       run: |
         # 根据状态生成消息标题和内容
         if [ "${{ job.status }}" == "success" ]; then
@@ -309,11 +285,11 @@ jobs:
 
         # 构造钉钉 Markdown 消息体
         MESSAGE=$(cat <<EOF
-{
+        {
   "msgtype": "markdown",
   "markdown": {
-    "title": "${TITLE}",
-    "text": "### ${TITLE}\n\n**仓库**: [${{ github.repository }}]($GITHUB_SERVER_URL/${{ github.repository }})\n\n**触发者**: ${{ github.actor }}\n\n**分支**: ${{ github.ref }}\n\n**状态**: <font color='${COLOR}'>${STATUS}</font>\n\n**时间**: ${{ env.Display_Date }}\n\n[查看详情]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+  "title": "${TITLE}",
+  "text": "### ${TITLE}\n\n**仓库**: [${{ github.repository }}]($GITHUB_SERVER_URL/${{ github.repository }})\n\n**触发者**: ${{ github.actor }}\n\n**分支**: ${{ github.ref }}\n\n**状态**: <font color='${COLOR}'>${STATUS}</font>\n\n**时间**: ${{ env.Display_Date }}\n\n[查看详情]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
   }
 }
 EOF
