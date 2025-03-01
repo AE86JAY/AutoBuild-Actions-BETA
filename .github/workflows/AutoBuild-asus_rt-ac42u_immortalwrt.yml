@@ -261,8 +261,7 @@ jobs:
         keep_minimum_runs: 2
         
     - name: 钉钉通知
-      if: |
-       (always() && 
+      if: (always() && 
        (env.Compile_Result == 'true' || github.event.action == 'workflow_dispatch') ||
        (github.event.action != 'workflow_dispatch' && cancelled())) &&
        github.event_name != 'workflow_dispatch'
