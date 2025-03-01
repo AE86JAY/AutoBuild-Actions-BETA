@@ -259,3 +259,34 @@ jobs:
       with:
         retain_days: 1
         keep_minimum_runs: 2
+    - name: DingTalk Notification
+  if: |
+    (always() && 
+    (env.Compile_Result == 'true' || github.event.action == 'workflow_dispatch') ||
+    (github.event.action != 'workflow_dispatch' && cancelled())) &&
+    github.event_name != 'workflow_dispatch'
+  env:
+    DINGTALK_TOKEN: ${{ secrets.DINGTALK_TOKEN }}
+  run: |
+    if [[ "${{ job.status }}" == "success" ]]; then
+      STATUS="✅ 编译成功"
+    elif [[ "${{ job.status }}" == "cancelled" ]]; then
+      STATUS="⏹️ 任务被取消"
+    else
+      STATUS="❌ 编译失败"
+    fi
+
+    PAYLOAD=$(cat <<EOF
+    {
+      "msgtype": "markdown",
+      "markdown": {
+        "title": "OpenWrt 编译状态",
+        "text": "### $STATUS\n\n**仓库**: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})\n**工作流**: [${{ github.workflow }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n**触发时间**: `${{ env.Display_Date }}`\n**Commit**: [${GITHUB_SHA:0:7}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})"
+      }
+    }
+    EOF
+    )
+
+    curl -s "$DINGTALK_TOKEN" \
+      -H "Content-Type: application/json" \
+      -d "${PAYLOAD}"
