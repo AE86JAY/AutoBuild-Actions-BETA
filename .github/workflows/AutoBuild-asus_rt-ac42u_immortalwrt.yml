@@ -259,6 +259,7 @@ jobs:
       with:
         retain_days: 1
         keep_minimum_runs: 2
+
     - name: Notify DingTalk Result
       if: always()  # 始终触发（成功/失败/取消）
       env:
