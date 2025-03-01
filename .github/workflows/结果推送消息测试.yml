@@ -2,7 +2,7 @@ name: 测试钉钉信息推送
 
 on:
   # 允许手动触发测试
-  workflow_dispatch:
+  # workflow_dispatch:
   # 推送代码到仓库时触发（可选）
   push:
     branches: [ main, master ]
