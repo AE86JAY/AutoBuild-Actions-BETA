@@ -260,33 +260,33 @@ jobs:
         retain_days: 1
         keep_minimum_runs: 2
     - name: DingTalk Notification
-  if: |
-    (always() && 
-    (env.Compile_Result == 'true' || github.event.action == 'workflow_dispatch') ||
-    (github.event.action != 'workflow_dispatch' && cancelled())) &&
-    github.event_name != 'workflow_dispatch'
-  env:
-    DINGTALK_TOKEN: ${{ secrets.DINGTALK_TOKEN }}
-  run: |
-    if [[ "${{ job.status }}" == "success" ]]; then
-      STATUS="✅ 编译成功"
-    elif [[ "${{ job.status }}" == "cancelled" ]]; then
-      STATUS="⏹️ 任务被取消"
-    else
-      STATUS="❌ 编译失败"
-    fi
+      if: |
+       (always() && 
+       (env.Compile_Result == 'true' || github.event.action == 'workflow_dispatch') ||
+       (github.event.action != 'workflow_dispatch' && cancelled())) &&
+       github.event_name != 'workflow_dispatch'
+       env:
+        DINGTALK_TOKEN: ${{ secrets.DINGTALK_TOKEN }}
+      run: |
+       if [[ "${{ job.status }}" == "success" ]]; then
+       STATUS="✅ 恭喜AC42U_Immortalwrt版固件编译成功"
+       elif [[ "${{ job.status }}" == "cancelled" ]]; then
+       STATUS="⏹️ AC42U_Immortalwrt版任务出错，已取消"
+       else
+       STATUS="❌ AC42U_Immortalwrt版编译失败，请查找原因。"
+       fi
 
-    PAYLOAD=$(cat <<EOF
-    {
-      "msgtype": "markdown",
-      "markdown": {
+       PAYLOAD=$(cat <<EOF
+       {
+       "msgtype": "markdown",
+       "markdown": {
         "title": "OpenWrt 编译状态",
         "text": "### $STATUS\n\n**仓库**: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})\n**工作流**: [${{ github.workflow }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n**触发时间**: `${{ env.Display_Date }}`\n**Commit**: [${GITHUB_SHA:0:7}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})"
-      }
-    }
-    EOF
-    )
+       }
+        }
+       EOF
+       )
 
-    curl -s "$DINGTALK_TOKEN" \
-      -H "Content-Type: application/json" \
-      -d "${PAYLOAD}"
+       curl -s "$DINGTALK_TOKEN" \
+       -H "Content-Type: application/json" \
+       -d "${PAYLOAD}"
