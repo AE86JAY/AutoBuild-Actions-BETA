@@ -13,11 +13,11 @@ jobs:
 
     steps:
     # 步骤 1：模拟成功构建
-    - name: Simulate Success
-      id: success_step
-      run: |
-        echo "🎉 模拟成功构建..."
-        exit 0  # 强制返回成功状态
+    #- name: Simulate Success
+    #  id: success_step
+    # # run: |
+    #    echo "🎉 模拟成功构建..."
+    #    exit 0  # 强制返回成功状态
 
     # 步骤 2：模拟失败构建（注释掉可跳过）
     - name: Simulate Failure (Uncomment to test)
