@@ -21,7 +21,7 @@ jobs:
 
     # 步骤 2：模拟失败构建（注释掉可跳过）
     - name: Simulate Failure (Uncomment to test)
-      if: true  # 默认禁用，需要测试时改为 true
+      if: false  # 默认禁用，需要测试时改为 true
       run: |
         echo "💥 模拟失败构建..."
         exit 1  # 强制返回失败状态
