@@ -1,0 +1,74 @@
+name: Test DingTalk Notification
+
+on:
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  test-notifications:
+    runs-on: ubuntu-latest
+    env:
+      DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }} # 确保在仓库 Secrets 中已配置
+
+    steps:
+    # 设置时间变量（两个通知都需要）
+    - name: Setup Time
+      run: echo "Display_Date=$(date '+%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_ENV
+
+    # 测试成功通知 -----------------------------------------------
+    - name: Simulate Success Step
+      id: upload_release
+      run: echo "This is a simulated success step"
+      # 设置伪输出以满足 success() 条件检查
+      continue-on-error: false
+
+    # 钉钉成功通知（将自动触发）
+    - name: Notify DingTalk Success
+      if: success() && steps.upload_release.outcome == 'success'
+      run: |
+        MESSAGE=$'**TEST 成功通知**\n\
+        - 仓库：${{ github.repository }}\n\
+        - 触发者：${{ github.actor }}\n\
+        - 分支：${{ github.ref }}\n\
+        - 时间：${{ env.Display_Date }}\n\
+        - [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+
+        JSON_DATA=$(jq -n \
+          --arg text "$MESSAGE" \
+          '{msgtype: "markdown", markdown: {title: "TEST 成功通知", text: $text}}')
+
+        curl -s -X POST "$DINGTALK_WEBHOOK" \
+          -H 'Content-Type: application/json' \
+          -d "$JSON_DATA"
+
+    # 测试失败通知 -----------------------------------------------
+    - name: Simulate Failure Step
+      if: always() # 确保始终执行以便测试失败通知
+      run: |
+        echo "Compile_Result=false" >> $GITHUB_ENV
+        exit 1 # 故意失败
+
+    # 钉钉失败通知（将自动触发）
+    - name: Notify DingTalk Failure
+      if: failure() || cancelled()
+      run: |
+        if [ "${{ env.Compile_Result }}" = "false" ]; then
+          ERROR_MSG="编译过程出错"
+        else
+          ERROR_MSG="任务被系统取消"
+        fi
+
+        MESSAGE=$'**TEST 失败通知**\n\
+        - 错误类型：'"$ERROR_MSG"'\n\
+        - 仓库：${{ github.repository }}\n\
+        - 触发者：${{ github.actor }}\n\
+        - 分支：${{ github.ref }}\n\
+        - 时间：${{ env.Display_Date }}\n\
+        - [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+
+        JSON_DATA=$(jq -n \
+          --arg text "$MESSAGE" \
+          '{msgtype: "markdown", markdown: {title: "TEST 失败通知", text: $text}}')
+
+        curl -s -X POST "$DINGTALK_WEBHOOK" \
+          -H 'Content-Type: application/json' \
+          -d "$JSON_DATA"
