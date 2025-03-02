@@ -273,6 +273,7 @@ wget https://api.github.com/repos/${{github.repository}}/releases/tags/AutoUpdat
   #   with:
   #     retain_days: 1
   #     keep_minimum_runs: 2
+  
   - name: Notify DingTalk (Success)
     if: env.Compile_Result == 'true' && env.UPLOAD_RELEASES == 'true' && !cancelled()
     env:
