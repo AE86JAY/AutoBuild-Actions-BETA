@@ -283,7 +283,7 @@ jobs:
          }'
 
     - name: Notify DingTalk (Failed)
-      if: env.Compile_Result == 'false' && !cancelled()     
+      if: env.Compile_Result == 'false' && cancelled()     
       env: 
         DT_TOKEN: ${{ secrets.DINGTALK_ACCESS_TOKEN }}
         DT_SECRET: ${{ secrets.DINGTALK_SECRET }}
