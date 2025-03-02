@@ -5,9 +5,9 @@ on:
   workflow_dispatch:
     inputs:
       test_status:
-        description: '测试状态 (success/failure)'
+        description: '测试状态 (true/canceled)'
         required: true
-        default: 'success'
+        default: 'true'
 
 jobs:
   Notify-Test:
@@ -20,7 +20,7 @@ jobs:
         echo "UPLOAD_RELEASES=true" >> $GITHUB_ENV
 
     - name: Trigger Success Notification
-      if: env.Compile_Result == 'success'
+      if: env.Compile_Result == 'true'
       env:
         DT_TOKEN: ${{ secrets.DINGTALK_ACCESS_TOKEN }}
         DT_SECRET: ${{ secrets.DINGTALK_SECRET }}
@@ -39,7 +39,7 @@ jobs:
           }'
 
     - name: Trigger Failure Notification
-      if: env.Compile_Result == 'failure'
+      if: env.Compile_Result == 'canceled'
       env:
         DT_TOKEN: ${{ secrets.DINGTALK_ACCESS_TOKEN }}
         DT_SECRET: ${{ secrets.DINGTALK_SECRET }}
@@ -53,6 +53,6 @@ jobs:
             "msgtype": "markdown",
             "markdown": {
                 "title": "⚠️ 测试失败警报",
-                "text": "### ❌ 钉钉通知测试失败 \n\n**🕒 时间**: ${{ env.Display_Date }} \n**📦 仓库**: [${{ github.repository }}](https://github.com/${{ github.repository }}) \n**🔍 日志**: [查看测试详情](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) \n\n> 🚨 请检查机器人配置！"
+                "text": "### ❌ 钉钉通知测试失已取消 \n\n**🕒 时间**: ${{ env.Display_Date }} \n**📦 仓库**: [${{ github.repository }}](https://github.com/${{ github.repository }}) \n**🔍 日志**: [查看测试详情](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) \n\n> 🚨 请检查机器人配置！"
             }
           }'
