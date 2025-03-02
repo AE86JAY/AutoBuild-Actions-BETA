@@ -23,7 +23,7 @@ jobs:
 
     # 钉钉成功通知（将自动触发）
     - name: Notify DingTalk Success
-      if: success() && steps.upload_release.outcome == 'success'
+      if: success() && steps.upload_release.outcome == 'true'
       run: |
         MESSAGE=$'**TEST 成功通知**\n\
         - 仓库：${{ github.repository }}\n\
@@ -44,14 +44,14 @@ jobs:
     - name: Simulate Failure Step
       if: always() # 确保始终执行以便测试失败通知
       run: |
-        echo "Compile_Result=false" >> $GITHUB_ENV
+        echo "Compile_Result=cancelled()" >> $GITHUB_ENV
         exit 1 # 故意失败
 
     # 钉钉失败通知（将自动触发）
     - name: Notify DingTalk Failure
       if: failure() || cancelled()
       run: |
-        if [ "${{ env.Compile_Result }}" = "false" ]; then
+        if [ "${{ env.Compile_Result }}" = "cancelled()" ]; then
           ERROR_MSG="编译过程出错"
         else
           ERROR_MSG="任务被系统取消"
