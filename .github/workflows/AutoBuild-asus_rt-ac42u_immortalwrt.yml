@@ -253,12 +253,12 @@ jobs:
         tag: AutoUpdate
         overwrite: true
 
-    - name: Delete old Workflow Runs
-      uses: GitRML/delete-workflow-runs@main
-      if: env.DELETE_OLD_WORKFLOW == 'true' && !cancelled()
-      with:
-        retain_days: 1
-        keep_minimum_runs: 2
+   # - name: Delete old Workflow Runs
+   #   uses: GitRML/delete-workflow-runs@main
+   #   if: env.DELETE_OLD_WORKFLOW == 'true' && !cancelled()
+   #   with:
+   #     retain_days: 1
+   #     keep_minimum_runs: 2
         
         # 钉钉成功通知（仅当Release上传成功时触发）
     - name: Notify DingTalk Success
