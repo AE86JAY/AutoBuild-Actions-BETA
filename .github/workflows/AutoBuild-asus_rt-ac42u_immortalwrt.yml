@@ -261,7 +261,7 @@ jobs:
         keep_minimum_runs: 2
         
     - name: Notify DingTalk (Success)
-      if: env.Compile_Result == 'true' && env.UPLOAD_RELEASES == 'true' && !cancelled()   
+      if: env.Compile_Result == 'true' && !cancelled()   
       env:
         DT_TOKEN: ${{ secrets.DINGTALK_ACCESS_TOKEN }}
         DT_SECRET: ${{ secrets.DINGTALK_SECRET }}
@@ -283,7 +283,7 @@ jobs:
          }'
 
     - name: Notify DingTalk (Failed)
-      if: env.Compile_Result == 'false' && cancelled()     
+      if: ${{ env.Compile_Result == 'false' || cancelled() }}     
       env: 
         DT_TOKEN: ${{ secrets.DINGTALK_ACCESS_TOKEN }}
         DT_SECRET: ${{ secrets.DINGTALK_SECRET }}
