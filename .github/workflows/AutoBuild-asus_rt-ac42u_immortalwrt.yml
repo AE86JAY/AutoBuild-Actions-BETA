@@ -260,33 +260,52 @@ jobs:
         retain_days: 1
         keep_minimum_runs: 2
         
-    - name: 钉钉通知
-      if: (always() && 
-       (env.Compile_Result == 'true' || github.event.action == 'workflow_dispatch') ||
-       (github.event.action != 'workflow_dispatch' && cancelled())) &&
-       github.event_name != 'workflow_dispatch'
+        # 钉钉成功通知（仅当Release上传成功时触发）
+    - name: Notify DingTalk Success
+      if: success() && steps.upload_release.outcome == 'success'
       env:
-        DINGTALK_TOKEN: ${{ secrets.DINGTALK_ACCESS_TOKEN }}
+        DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
       run: |
-       if [[ "${{ job.status }}" == "success" ]]; then
-       STATUS="✅ 恭喜AC42U_Immortalwrt版固件编译成功"
-       elif [[ "${{ job.status }}" == "cancelled" ]]; then
-       STATUS="⏹️ AC42U_Immortalwrt版任务出错，已取消"
-       else
-       STATUS="❌ AC42U_Immortalwrt版编译失败，请查找原因。"
-       fi
+        MESSAGE='**恭喜RT-AC42U Immortalwrt版编译成功！**\n
+- 仓库：${{ github.repository }}
+- 触发者：${{ github.actor }}
+- 分支：${{ github.ref }}
+- 时间：${{ env.Display_Date }}
+- [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+        
+        JSON_DATA='{
+          "msgtype": "markdown",
+          "markdown": {
+            "title": "编译成功通知",
+            "text": "$(echo $MESSAGE | sed 's/"/\\"/g')"
+          }
+        }'
+        curl -s -X POST $DINGTALK_WEBHOOK \
+          -H 'Content-Type: application/json' \
+          -d "$(echo $JSON_DATA | tr -d '\n')"
 
-       PAYLOAD=$(cat <<EOF
-       {
-       "msgtype": "markdown",
-       "markdown": {
-        "title": "OpenWrt 编译状态",
-        "text": "### $STATUS\n\n**仓库**: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})\n**工作流**: [${{ github.workflow }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n**触发时间**: `${{ env.Display_Date }}`\n**Commit**: [${GITHUB_SHA:0:7}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})"
-       }
-        }
-       EOF
-       )
+    # 钉钉失败通知（编译失败/被取消时触发）
+    - name: Notify DingTalk Failure
+      if: failure() || (cancelled() && github.event.action != 'workflow_dispatch')
+      env:
+        DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
+      run: |
+        ERROR_MSG="${{ env.Compile_Result == 'false' && '编译过程出错' || '任务被系统取消' }}"
+        MESSAGE='**RT-AC42U Immortalwrt版编译失败！**\n
+- 错误类型：$ERROR_MSG
+- 仓库：${{ github.repository }}
+- 触发者：${{ github.actor }}
+- 分支：${{ github.ref }}
+- 时间：${{ env.Display_Date }}
+- [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
 
-       curl -s "$DINGTALK_ACCESS_TOKEN" \
-       -H "Content-Type: application/json" \
-       -d "${PAYLOAD}"
+        JSON_DATA='{
+          "msgtype": "markdown",
+          "markdown": {
+            "title": "编译失败通知",
+            "text": "$(echo $MESSAGE | sed 's/"/\\"/g')"
+          }
+        }'
+        curl -s -X POST $DINGTALK_WEBHOOK \
+          -H 'Content-Type: application/json' \
+          -d "$(echo $JSON_DATA | tr -d '\n')"
