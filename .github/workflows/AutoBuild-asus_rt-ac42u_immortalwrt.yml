@@ -255,12 +255,12 @@ jobs:
 
     - name: Delete workflow runs
       if: env.DELETE_OLD_WORKFLOW == 'true' && !cancelled()
-        uses: Mattraks/delete-workflow-runs@v2
-        with:
-          token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          retain_days: 30
-          keep_minimum_runs: 3   
+      uses: Mattraks/delete-workflow-runs@v2
+      with:
+        token: ${{ github.token }}
+        repository: ${{ github.repository }}
+        retain_days: 30
+        keep_minimum_runs: 3   
         
     - name: Notify DingTalk (Success)
       if: env.Compile_Result == 'true' && !cancelled()   
