@@ -253,12 +253,14 @@ jobs:
         tag: AutoUpdate
         overwrite: true
 
-    - name: Delete old Workflow Runs
-      uses: GitRML/delete-workflow-runs@main
+    - name: Delete workflow runs
       if: env.DELETE_OLD_WORKFLOW == 'true' && !cancelled()
-      with:
-        retain_days: 1
-        keep_minimum_runs: 2
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 30
+          keep_minimum_runs: 3   
         
     - name: Notify DingTalk (Success)
       if: env.Compile_Result == 'true' && !cancelled()   
