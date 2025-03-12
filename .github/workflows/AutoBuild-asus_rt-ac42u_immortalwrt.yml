@@ -257,8 +257,8 @@ jobs:
       if: env.DELETE_OLD_WORKFLOW == 'true' && !cancelled()
       uses: Mattraks/delete-workflow-runs@v2
       with:
-        token: ${{ github.token }}
-        repository: ${{ github.repository }}
+        token: ${{ secrets.PAT }}
+     #   repository: ${{ github.repository }}
         retain_days: 30
         keep_minimum_runs: 3   
         
