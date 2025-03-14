@@ -113,21 +113,7 @@ EOF
 		rm -r ${FEEDS_PKG}/curl
 		rm -r ${FEEDS_PKG}/msd_lite
 		Copy ${CustomFiles}/curl ${FEEDS_PKG}
-
-    case "${OP_AUTHOR}/${OP_REPO}:${OP_BRANCH}" in
-    immortalwrt/immortalwrt*)
-MAC80211_UC="${WORK}/package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc"
-if [ -f "${MAC80211_UC}" ];
-then
-  sed -i \
-    -e "s|ssid='\${defaults?.ssid || \"ImmortalWrt\"}'|ssid='\${band_name == \"2g\" ? \"CandyTime_C9A700_2.4G\" : \"CandyTime_C9A700\"}'|g" \"${MAC80211_UC}"
-  echo "已修改 ${MAC80211_UC} 以分开2.4G/5G SSID"
-    else
-  echo "错误：未找到 mac80211.uc 文件"
-  fi
-  ;;
-  esac
-
+		
 		case "${TARGET_BOARD}" in
 		ramips)
 			sed -i "/DEVICE_COMPAT_VERSION := 1.1/d" target/linux/ramips/image/mt7621.mk
@@ -218,7 +204,8 @@ then
 
 		hysteria_version="2.6.1"
 		wstunnel_version="10.1.9"
-		taierspeed_version="1.7.2”
+		taierspeed_version="1.7.2"
+		
 		wget --quiet --no-check-certificate -P /tmp \
 			https://github.com/apernet/hysteria/releases/download/app%2Fv${hysteria_version}/hysteria-linux-amd64
 		wget --quiet --no-check-certificate -P /tmp \
