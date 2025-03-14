@@ -218,8 +218,7 @@ then
 
 		hysteria_version="2.6.1"
 		wstunnel_version="10.1.9"
-		taierspeed_version="1.7.2"
-		
+		taierspeed_version="1.7.2”
 		wget --quiet --no-check-certificate -P /tmp \
 			https://github.com/apernet/hysteria/releases/download/app%2Fv${hysteria_version}/hysteria-linux-amd64
 		wget --quiet --no-check-certificate -P /tmp \
