@@ -125,7 +125,8 @@ then
     else
   echo "错误：未找到 mac80211.uc 文件"
   fi
-  exit 0
+  ;;
+  esac
 
 		case "${TARGET_BOARD}" in
 		ramips)
