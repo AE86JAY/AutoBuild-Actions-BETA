@@ -223,4 +223,14 @@ EOF
 		# ReleaseDL https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest geoip.dat ${BASE_FILES}/usr/v2ray
 	;;
 	esac
+	
+	case "${OP_AUTHOR}/${OP_REPO}:${OP_BRANCH}" in
+    immortalwrt/immortalwrt*)
+        WIFI_SCRIPT_PATH="package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc"
+# 设置国家代码为 CN
+sed -i "s|country='\${country || ''}'|country='CN'|g" ${WORK}/${WIFI_SCRIPT_PATH}
+# 根据频段设置不同 SSID
+sed -i "s|ssid='\${defaults?.ssid || \"ImmortalWrt\"}'|ssid='\${band_name == \"2g\" ? \"CandyTime_C9A700_2.4G\" : \"CandyTime_C9A700\"}'|g" ${WORK}/${WIFI_SCRIPT_PATH}
+    ;;
+    esac
 }
