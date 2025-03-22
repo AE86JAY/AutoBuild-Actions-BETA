@@ -359,12 +359,11 @@ Firmware_Diy_End() {
 	fi
 	ECHO "[Firmware_Diy_End] Done"
     ECHO "Generating Update_Logs.json ..."
-    OPENWRT_VERSION=$(grep 'DISTRIB_RELEASE=' ${Version_File} | awk -F "='" '{print $2}' | cut -d "'" -f1)
+    OPENWRT_VERSION=${OP_VERSION}
     LUCI_VERSION=$(git -C ${FEEDS_LUCI} log -1 --format="%h (%ad)" --date=short)
     KERNEL_VERSION=$(grep '^LINUX_VERSION=' ${CONFIG_TEMP} | cut -d '=' -f2 | tr -d '"')
     COMMIT_MESSAGE=$(git -C ${WORK} log -1 --pretty="%s [%h]")
-    BUILD_DATE=$(TZ='Asia/Shanghai' date -d "@${Compile_Date}" +"%Y-%m-%d %H:%M:%S")
-
+    BUILD_DATE=${Compile_Date}
     jq -n \
         --arg ow_ver "$OPENWRT_VERSION" \
         --arg luci_ver "$LUCI_VERSION" \
