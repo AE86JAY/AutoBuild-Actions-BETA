@@ -359,24 +359,32 @@ Firmware_Diy_End() {
 	fi
 	ECHO "[Firmware_Diy_End] Done"
     ECHO "Generating Update_Logs.json ..."
-    OPENWRT_VERSION=${OP_VERSION}
-    LUCI_VERSION=$(git -C ${FEEDS_LUCI} log -1 --format="%h (%ad)" --date=short)
-    KERNEL_VERSION=$(grep '^LINUX_VERSION=' ${CONFIG_TEMP} | cut -d '=' -f2 | tr -d '"')
-    COMMIT_MESSAGE=$(git -C ${WORK} log -1 --pretty="%s [%h]")
-    BUILD_DATE=${Compile_Date}
-    jq -n \
-        --arg ow_ver "$OPENWRT_VERSION" \
-        --arg luci_ver "$LUCI_VERSION" \
-        --arg kernel_ver "$KERNEL_VERSION" \
-        --arg commit_msg "$COMMIT_MESSAGE" \
-        --arg build_date "$BUILD_DATE" \
-        '{
-            "OpenWrt版本": $ow_ver,
-            "Luci版本": $luci_ver,
-            "内核版本": $kernel_ver,
-            "更新信息": $commit_msg,
-            "编译日期": $build_date
-        }' > ${Fw_Path}/Update_Logs.json
+OPENWRT_VERSION=${OP_VERSION}
+LUCI_VERSION=$(git -C ${FEEDS_LUCI} log -1 --format="%h (%ad)" --date=short)
+# 修复内核版本获取逻辑
+KERNEL_FILE=$(find ${WORK}/include -maxdepth 1 -type f -name 'kernel-*' | head -n1)
+if [[ -n ${KERNEL_FILE} ]]; then
+    KERNEL_MAJOR_VERSION=$(basename "${KERNEL_FILE}" | cut -d '-' -f2)
+    KERNEL_PATCH_VERSION=$(grep "LINUX_VERSION-${KERNEL_MAJOR_VERSION}" "${KERNEL_FILE}" | awk -F '= ' '{print $2}' | tr -d ' ')
+    KERNEL_VERSION="${KERNEL_MAJOR_VERSION}${KERNEL_PATCH_VERSION}"
+else
+    KERNEL_VERSION=$(grep '^LINUX_VERSION=' "${CONFIG_TEMP}" | cut -d '=' -f2 | tr -d '"')
+fi
+COMMIT_MESSAGE=$(git -C ${WORK} log -1 --pretty="%s [%h]")
+BUILD_DATE=${Compile_Date}
+jq -n \
+    --arg ow_ver "$OPENWRT_VERSION" \
+    --arg luci_ver "$LUCI_VERSION" \
+    --arg kernel_ver "$KERNEL_VERSION" \
+    --arg commit_msg "$COMMIT_MESSAGE" \
+    --arg build_date "$BUILD_DATE" \
+    '{
+        "OpenWrt版本": $ow_ver,
+        "Luci版本": $luci_ver,
+        "内核版本": $kernel_ver,
+        "更新信息": $commit_msg,
+        "编译日期": $build_date
+    }' > ${Fw_Path}/Update_Logs.json
 
     mv -f ${Fw_Path}/Update_Logs.json ${WORK}/bin/Firmware/
     ECHO "Update_Logs.json 生成成功。"
