@@ -224,19 +224,35 @@ EOF
 	;;
 	esac
 	
-	case "${OP_AUTHOR}/${OP_REPO}:${OP_BRANCH}" in
-immortalwrt/immortalwrt*)
-    WIFI_SCRIPT_PATH="package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc"
-    # 检查文件是否存在
-    if [ ! -f "${WORK}/${WIFI_SCRIPT_PATH}" ]; then
-        echo "Error: File ${WORK}/${WIFI_SCRIPT_PATH} not found!"
-        exit 1
-    fi
-    # 设置国家代码为 CN（使用 # 分隔符，转义 $ 和 {}）
-    sed -i "s#country='\${country || ''}'#country='CN'#g" "${WORK}/${WIFI_SCRIPT_PATH}"
-    # 根据频段设置不同 SSID（使用 @ 分隔符，转义 $、{}、? 和双引号）
-    sed -i \
-        -e "s#ssid='\${defaults\?\.ssid || \"ImmortalWrt\"}'#ssid='CandyTime_C9A700\${ band_name == \"2g\" ? \"_2.4G\" : \"\" }'#g" \"${WORK}/${WIFI_SCRIPT_PATH}"
+	# 将预设配置和脚本复制到固件
+    case "${OP_AUTHOR}/${OP_REPO}:${OP_BRANCH}" in immortalwrt/immortalwrt*)
+        # 复制network和wireless模板到固件的uci-defaults目录
+        Copy ${CustomFiles}/ConfigTemplates/network ${BASE_FILES}/etc/uci-defaults
+        Copy ${CustomFiles}/ConfigTemplates/wireless ${BASE_FILES}/etc/uci-defaults
+        
+        # 创建自动替换脚本
+        cat > ${BASE_FILES}/etc/uci-defaults/99-copy-config << EOF
+#!/bin/sh
+# 替换网络配置
+cp /etc/uci-defaults/network /etc/config/network
+cp /etc/uci-defaults/wireless /etc/config/wireless
+
+# 确保权限正确
+chmod 644 /etc/config/network
+chmod 644 /etc/config/wireless
+
+# 删除临时文件
+rm -f /etc/uci-defaults/network
+rm -f /etc/uci-defaults/wireless
+
+# 可选：重启网络服务
+/etc/init.d/network restart
+
+exit 0
+EOF
+        
+        # 赋予脚本执行权限
+        chmod +x ${BASE_FILES}/etc/uci-defaults/99-copy-config
     ;;
     esac
 }
