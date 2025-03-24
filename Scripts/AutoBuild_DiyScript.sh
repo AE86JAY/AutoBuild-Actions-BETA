@@ -248,6 +248,8 @@ else
 fi
 /etc/init.d/firewall restart
 exit 0
+EOF
+chmod +x ${BASE_FILES}/etc/uci-defaults/99-copy-config
     ;;
     esac
 }
