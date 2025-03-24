@@ -224,35 +224,30 @@ EOF
 	;;
 	esac
 	
-	# 将预设配置和脚本复制到固件
     case "${OP_AUTHOR}/${OP_REPO}:${OP_BRANCH}" in immortalwrt/immortalwrt*)
-        # 复制network和wireless模板到固件的uci-defaults目录
+    
         Copy ${CustomFiles}/ConfigTemplates/network ${BASE_FILES}/etc/uci-defaults
         Copy ${CustomFiles}/ConfigTemplates/wireless ${BASE_FILES}/etc/uci-defaults
         
-        # 创建自动替换脚本
         cat > ${BASE_FILES}/etc/uci-defaults/99-copy-config << EOF
 #!/bin/sh
-# 替换网络配置
 cp /etc/uci-defaults/network /etc/config/network
 cp /etc/uci-defaults/wireless /etc/config/wireless
-
-# 确保权限正确
 chmod 644 /etc/config/network
 chmod 644 /etc/config/wireless
-
-# 删除临时文件
 rm -f /etc/uci-defaults/network
 rm -f /etc/uci-defaults/wireless
-
-# 可选：重启网络服务
-/etc/init.d/network restart
-
+WAN_ZONE=$(uci show firewall | grep "=wan" | cut -d '.' -f 2 | cut -d '=' -f 1)
+if [ -n "$WAN_ZONE" ]; then
+    uci add_list firewall.$WAN_ZONE.network='wwan'
+    uci add_list firewall.$WAN_ZONE.network='wwan2'
+    uci commit firewall
+    echo "[INFO] Added wwan and wwan2 to firewall wan zone."
+else
+    echo "[ERROR] Failed to find wan zone in firewall config!"
+fi
+/etc/init.d/firewall restart
 exit 0
-EOF
-        
-        # 赋予脚本执行权限
-        chmod +x ${BASE_FILES}/etc/uci-defaults/99-copy-config
     ;;
     esac
 }
