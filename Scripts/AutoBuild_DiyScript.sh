@@ -228,26 +228,23 @@ EOF
     
         Copy ${CustomFiles}/ConfigTemplates/network ${BASE_FILES}/etc/uci-defaults
         Copy ${CustomFiles}/ConfigTemplates/wireless ${BASE_FILES}/etc/uci-defaults
+        Copy ${CustomFiles}/ConfigTemplates/immortalwrt-snapshots.pem ${BASE_FILES}/etc/uci-defaults
         
         cat > ${BASE_FILES}/etc/uci-defaults/99-copy-config << EOF
 #!/bin/sh
 cp /etc/uci-defaults/network /etc/config/network
 cp /etc/uci-defaults/wireless /etc/config/wireless
+cp /etc/uci-defaults/immortalwrt-snapshots.pem /etc/apk/keys/immortalwrt-snapshots.pem
+
 chmod 644 /etc/config/network
 chmod 644 /etc/config/wireless
+chmod 644 /etc/apk/keys/immortalwrt-snapshots.pem
 rm -f /etc/uci-defaults/network
 rm -f /etc/uci-defaults/wireless
-WAN_ZONE=$(uci show firewall | grep "=wan" | cut -d '.' -f 2 | cut -d '=' -f 1)
-if [ -n "$WAN_ZONE" ]; then
-    uci add_list firewall.$WAN_ZONE.network='wwan'
-    uci add_list firewall.$WAN_ZONE.network='wwan2'
-    uci commit firewall
-    echo "[INFO] Added wwan and wwan2 to firewall wan zone."
-else
-    echo "[ERROR] Failed to find wan zone in firewall config!"
-fi
-/etc/init.d/firewall restart
-exit 0
+rm -f /etc/uci-defaults/immortalwrt-snapshots.pem
+uci add_list firewall.@zone[name='wan'].network='wwan'
+uci add_list firewall.@zone[name='wan'].network='wwan6'
+uci commit firewall
 EOF
 chmod +x ${BASE_FILES}/etc/uci-defaults/99-copy-config
     ;;
