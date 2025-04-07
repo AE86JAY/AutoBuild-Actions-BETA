@@ -35,7 +35,7 @@ config interface 'wwan'
 	option proto 'dhcp'
 	option device 'radio0.network2'
 
-config interface 'wwan2'
-	option proto 'dhcp'
-	option device 'radio1.network2'
+config interface 'wwan6'
+	option proto 'dhcpv6'
+	option device 'radio0.network2'
 
