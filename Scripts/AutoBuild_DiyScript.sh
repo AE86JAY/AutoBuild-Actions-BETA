@@ -241,9 +241,21 @@ chmod 644 /etc/apk/keys/immortalwrt-snapshots.pem
 rm -f /etc/uci-defaults/network
 rm -f /etc/uci-defaults/wireless
 rm -f /etc/uci-defaults/immortalwrt-snapshots.pem
-uci add_list firewall.@zone[name='wan'].network='wwan'
-uci add_list firewall.@zone[name='wan'].network='wwan6'
+uci commit network
+sleep 10
+uci commit wireless
+# 等待30秒确保网络接口就绪
+sleep 30
+
+# 添加防火墙规则
+uci -q delete firewall.@zone[0].network
+uci add_list firewall.@zone[0].network='wan'
+uci add_list firewall.@zone[0].network='wan6'
+uci add_list firewall.@zone[0].network='wwan'
+uci add_list firewall.@zone[0].network='wwan6'
 uci commit firewall
+
+exit 0
 EOF
 chmod +x ${BASE_FILES}/etc/uci-defaults/99-copy-config
     ;;
