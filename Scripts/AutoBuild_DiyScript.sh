@@ -225,11 +225,10 @@ EOF
 	esac
 	
     case "${OP_AUTHOR}/${OP_REPO}:${OP_BRANCH}" in immortalwrt/immortalwrt*)
-    
+    AddPackage other torguardvpn luci-app-easymesh main
         Copy ${CustomFiles}/ConfigTemplates/network ${BASE_FILES}/etc/uci-defaults
         Copy ${CustomFiles}/ConfigTemplates/wireless ${BASE_FILES}/etc/uci-defaults
         Copy ${CustomFiles}/ConfigTemplates/immortalwrt-snapshots.pem ${BASE_FILES}/etc/uci-defaults
-        
         cat > ${BASE_FILES}/etc/uci-defaults/99-copy-config << EOF
 #!/bin/sh
 cp /etc/uci-defaults/network /etc/config/network
