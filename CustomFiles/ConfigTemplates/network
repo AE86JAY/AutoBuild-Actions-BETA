@@ -1,4 +1,3 @@
-
 config interface 'loopback'
 	option device 'lo'
 	option proto 'static'
@@ -38,4 +37,7 @@ config interface 'wwan'
 config interface 'wwan6'
 	option proto 'dhcpv6'
 	option device 'radio0.network2'
-
+	
+config interface 'wwan3'
+	option proto 'dhcp'
+	option device 'radio1.network2'

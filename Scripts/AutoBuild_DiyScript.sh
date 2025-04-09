@@ -253,6 +253,8 @@ uci add_list firewall.@zone[0].network='wan'
 uci add_list firewall.@zone[0].network='wan6'
 uci add_list firewall.@zone[0].network='wwan'
 uci add_list firewall.@zone[0].network='wwan6'
+uci add_list firewall.@zone[0].network='wwan3'
+
 uci commit firewall
 
 exit 0
