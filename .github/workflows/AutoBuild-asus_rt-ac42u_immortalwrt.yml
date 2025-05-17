@@ -32,8 +32,8 @@ on:
    - cron: 0 0 1 * *
   
   ## 重新点亮 Star 时触发编译(不要删除此行注释)
-  #watch:
-  #  types: [started]
+  watch:
+    types: [started]
 
 ### 请按需求修改以下内容
 ### 环境变量设置
