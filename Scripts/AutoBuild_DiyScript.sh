@@ -108,8 +108,11 @@ EOF
 		AddPackage msd_lite ximiTech luci-app-msd_lite main
 		AddPackage msd_lite ximiTech msd_lite main
 		AddPackage iptvhelper riverscn openwrt-iptvhelper master
+		AddPackage other ae86jay luci-app-easymesh main
+
 		rm -r ${FEEDS_PKG}/mosdns
 		rm -r ${FEEDS_LUCI}/luci-app-mosdns
+		rm -r ${FEEDS_LUCI}/luci-app-easymesh
 		rm -r ${FEEDS_PKG}/curl
 		rm -r ${FEEDS_PKG}/msd_lite
 		Copy ${CustomFiles}/curl ${FEEDS_PKG}
@@ -225,8 +228,7 @@ EOF
 	esac
 	
     case "${OP_AUTHOR}/${OP_REPO}:${OP_BRANCH}" in immortalwrt/immortalwrt*)
-    AddPackage other torguardvpn luci-app-easymesh main
-    AddPackage other danchexiaoyang luci-app-syncthing main
+    AddPackage other ae86jay luci-app-easymesh main
         Copy ${CustomFiles}/ConfigTemplates/network ${BASE_FILES}/etc/uci-defaults
         Copy ${CustomFiles}/ConfigTemplates/wireless ${BASE_FILES}/etc/uci-defaults
         Copy ${CustomFiles}/ConfigTemplates/immortalwrt-snapshots.pem ${BASE_FILES}/etc/uci-defaults
