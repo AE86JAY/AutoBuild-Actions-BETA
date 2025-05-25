@@ -229,36 +229,35 @@ EOF
 	
     case "${OP_AUTHOR}/${OP_REPO}:${OP_BRANCH}" in immortalwrt/immortalwrt*)
     AddPackage other ae86jay luci-app-easymesh main
-        Copy ${CustomFiles}/ConfigTemplates/network ${BASE_FILES}/etc/uci-defaults
-        Copy ${CustomFiles}/ConfigTemplates/wireless ${BASE_FILES}/etc/uci-defaults
+#        Copy ${CustomFiles}/ConfigTemplates/network ${BASE_FILES}/etc/uci-defaults
+#        Copy ${CustomFiles}/ConfigTemplates/wireless ${BASE_FILES}/etc/uci-defaults
         Copy ${CustomFiles}/ConfigTemplates/immortalwrt-snapshots.pem ${BASE_FILES}/etc/uci-defaults
         cat > ${BASE_FILES}/etc/uci-defaults/99-copy-config << EOF
 #!/bin/sh
-cp /etc/uci-defaults/network /etc/config/network
-cp /etc/uci-defaults/wireless /etc/config/wireless
+# cp /etc/uci-defaults/network /etc/config/network
+# cp /etc/uci-defaults/wireless /etc/config/wireless
 cp /etc/uci-defaults/immortalwrt-snapshots.pem /etc/apk/keys/immortalwrt-snapshots.pem
 
-chmod 644 /etc/config/network
-chmod 644 /etc/config/wireless
+# chmod 644 /etc/config/network
+# chmod 644 /etc/config/wireless
 chmod 644 /etc/apk/keys/immortalwrt-snapshots.pem
-rm -f /etc/uci-defaults/network
-rm -f /etc/uci-defaults/wireless
+# rm -f /etc/uci-defaults/network
+# rm -f /etc/uci-defaults/wireless
 rm -f /etc/uci-defaults/immortalwrt-snapshots.pem
-uci commit network
-sleep 10
-uci commit wireless
+# uci commit network
+# uci commit wireless
 # 等待30秒确保网络接口就绪
-sleep 30
+# sleep 30
 
 # 添加防火墙规则
-uci -q delete firewall.@zone[0].network
-uci add_list firewall.@zone[0].network='wan'
-uci add_list firewall.@zone[0].network='wan6'
-uci add_list firewall.@zone[0].network='wwan'
-uci add_list firewall.@zone[0].network='wwan6'
-uci add_list firewall.@zone[0].network='wwan3'
+# uci -q delete firewall.@zone[0].network
+# uci add_list firewall.@zone[0].network='wan'
+# uci add_list firewall.@zone[0].network='wan6'
+# uci add_list firewall.@zone[0].network='wwan'
+# uci add_list firewall.@zone[0].network='wwan6'
+# uci add_list firewall.@zone[0].network='wwan3'
 
-uci commit firewall
+# uci commit firewall
 
 exit 0
 EOF

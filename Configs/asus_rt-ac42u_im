@@ -85,8 +85,8 @@ CONFIG_PACKAGE_luci-app-pptp-server=y
 # CONFIG_PACKAGE_luci-app-sqm
 CONFIG_PACKAGE_luci-app-syncdial=y
 CONFIG_PACKAGE_luci-app-smartdns=y
-CONFIG_PACKAGE_syncthing=y
-CONFIG_PACKAGE_luci-app-syncthing=y
+CONFIG_PACKAGE_syncthing=n
+CONFIG_PACKAGE_luci-app-syncthing=n
 # CONFIG_PACKAGE_luci-app-socat is not set
 # CONFIG_PACKAGE_luci-app-ttyd is not set
 CONFIG_PACKAGE_luci-app-turboacc=y
@@ -105,7 +105,7 @@ CONFIG_PACKAGE_luci-ssl-openssl=y
 # 主题包
 CONFIG_PACKAGE_luci-theme-argon=y
 CONFIG_PACKAGE_luci-theme-argon-mod=n
-CONFIG_PACKAGE_luci-theme-material=y
+CONFIG_PACKAGE_luci-theme-material=n
 
 # Other Appliciations
 CONFIG_PACKAGE_bash=y
