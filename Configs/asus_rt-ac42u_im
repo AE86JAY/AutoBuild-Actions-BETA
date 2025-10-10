@@ -53,7 +53,7 @@ CONFIG_PACKAGE_luci-app-samba4=y
 # LUCI Appliciations
 CONFIG_PACKAGE_luci-app-accesscontrol=y
 CONFIG_PACKAGE_luci-app-argon-config=y
-CONFIG_PACKAGE_luci-app-openclash=y
+CONFIG_PACKAGE_luci-app-openclash=n
 # CONFIG_PACKAGE_luci-app-adguardhome
 CONFIG_PACKAGE_luci-app-autoupdate=y
 # CONFIG_PACKAGE_luci-app-aria2
@@ -153,9 +153,9 @@ CONFIG_PACKAGE_shadow-groupdel=y
 CONFIG_PACKAGE_shadow-groupmems=y
 CONFIG_PACKAGE_shadow-groupmod=y
 CONFIG_PACKAGE_shadow-groups=y
-CONFIG_PACKAGE_shadow-grpck=y
-CONFIG_PACKAGE_shadow-grpconv=y
-CONFIG_PACKAGE_shadow-grpunconv=y
+CONFIG_PACKAGE_shadow-grpck=n
+CONFIG_PACKAGE_shadow-grpconv=n
+CONFIG_PACKAGE_shadow-grpunconv=n
 CONFIG_PACKAGE_shadow-lastlog=y
 CONFIG_PACKAGE_shadow-login=y
 CONFIG_PACKAGE_shadow-logoutd=y
