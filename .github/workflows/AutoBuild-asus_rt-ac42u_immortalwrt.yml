@@ -254,14 +254,14 @@ jobs:
         tag: AutoUpdate
         overwrite: true
 
-    - name: Delete workflow runs
-      if: env.DELETE_OLD_WORKFLOW == 'true' && !cancelled()
-      uses: Mattraks/delete-workflow-runs@v2
-      with:
-        token: ${{ secrets.PAT }}
+#    - name: Delete workflow runs
+#      if: env.DELETE_OLD_WORKFLOW == 'true' && !cancelled()
+#      uses: Mattraks/delete-workflow-runs@v2
+#      with:
+d        token: ${{ secrets.PAT }}
      #   repository: ${{ github.repository }}
-        retain_days: 30
-        keep_minimum_runs: 3   
+#        retain_days: 30
+#        keep_minimum_runs: 3   
         
     - name: Notify DingTalk (Success)
       if: env.Compile_Result == 'true' && !cancelled()   
