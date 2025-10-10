@@ -51,7 +51,7 @@ env:
 # 删除无用文件以增加编译空间
   DELETE_USELESS_FILES: true
 # 删除早期的 workflow 任务
-  DELETE_OLD_WORKFLOW: true
+  DELETE_OLD_WORKFLOW: false
 # Cache 加速编译
   CACHE_ACCELERATE: true
   TZ: Asia/Shanghai
@@ -205,7 +205,7 @@ jobs:
     - name: Build OpenWrt
       run: |
         cd openwrt
-        make -j4 || make -j1 V=s
+        make -j8 || make -j2 V=s
         [ "$?" == 0 ] && echo "Compile_Result=true" >> $GITHUB_ENV || echo "Compile_Result=false" >> $GITHUB_ENV
 
     - name: Checkout Firmware
