@@ -19,7 +19,7 @@ on:
         default: ''
       Tempoary_FLAG:
         description: '固件标签 [可选]'
-        default: ''
+        default: 'ap'
 ### 界面控制部分结束 ( 以上内容请保持不变 )
 
   ## Git Push 时触发编译(不要删除此行注释)
